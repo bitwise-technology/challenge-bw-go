@@ -1,17 +1,35 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/challenge-bw-go/src/database"
 	"github.com/challenge-bw-go/src/models"
-	"gorm.io/gorm"
+	"github.com/challenge-bw-go/src/validators"
+	"github.com/gin-gonic/gin"
 )
 
-type UserRepo struct {
-	Db *gorm.DB
-}
+func CreateUser(c *gin.Context) {
+	var input models.User
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request"})
+		return
+	}
 
-func New() *UserRepo {
-	db := database.InitDb()
-	db.AutoMigrate(&models.User{})
-	return &UserRepo{Db: db}
+	if validators.UserCreateValidator(input) == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request"})
+		return
+	}
+
+	user := models.User{
+		Username: input.Username, Name: input.Name, LastName: input.LastName, ProfileImageUrl: input.ProfileImageUrl,
+		Bio: input.Bio, Email: input.Email, Gender: input.Gender,
+	}
+
+	if err := database.Db.Create(&user).Error; err != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"data": user})
 }

@@ -3,17 +3,19 @@ package database
 import (
 	"fmt"
 
+	"github.com/challenge-bw-go/src/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-const DB_USERNAME = "admin"
-const DB_PASSWORD = "admin"
+const DB_USERNAME = "bw"
+const DB_PASSWORD = "bw"
 const DB_NAME = "bw_go"
 const DB_HOST = "127.0.0.1"
 const DB_PORT = "3306"
 
-var Db * gorm.DB
+var Db *gorm.DB
+
 func InitDb() *gorm.DB {
 	Db = connectDB()
 	return Db
@@ -21,7 +23,7 @@ func InitDb() *gorm.DB {
 
 func connectDB() *gorm.DB {
 	var err error
-	dsn := DB_USERNAME +":"+ DB_PASSWORD +"@tcp"+ "("+  DB_HOST + ":" + DB_PORT +")/" + DB_NAME + "?"+ "parseTime=true&loc=Local"
+	dsn := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME + "?" + "parseTime=true&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
@@ -31,4 +33,9 @@ func connectDB() *gorm.DB {
 	}
 
 	return db
+}
+
+func Initialize() {
+	db := InitDb()
+	db.AutoMigrate(&models.User{})
 }

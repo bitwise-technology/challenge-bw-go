@@ -6,6 +6,6 @@ import (
 )
 
 func HelloRoutes(route *gin.RouterGroup) {
-	group := route.Group("/")
-	group.GET("/hello", controllers.HelloWorld)
+	group := route.Group("/hello")
+	group.GET("/", controllers.HelloWorld)
 }
