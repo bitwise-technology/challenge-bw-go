@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/challenge-bw-go/src/database"
 	"github.com/challenge-bw-go/src/models"
+	"github.com/challenge-bw-go/src/repositories"
 	"github.com/challenge-bw-go/src/validators"
 	"github.com/gin-gonic/gin"
 )
@@ -26,10 +26,16 @@ func CreateUser(c *gin.Context) {
 		Bio: input.Bio, Email: input.Email, Gender: input.Gender,
 	}
 
-	if err := database.Db.Create(&user).Error; err != nil {
+	if err := repositories.CreateUser(&user); err != nil {
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"data": user})
+}
+
+func GetUsers(c *gin.Context) {
+	users := repositories.GetUsers()
+
+	c.JSON(http.StatusCreated, gin.H{"data": users})
 }
