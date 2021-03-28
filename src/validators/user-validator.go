@@ -17,6 +17,10 @@ func UserCreateValidator(user models.User) bool {
 		return false
 	}
 
+	if len(user.Name) < 3 || len(user.Name) > 30 {
+		return false
+	}
+
 	if err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
 			return false
