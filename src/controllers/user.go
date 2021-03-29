@@ -39,3 +39,21 @@ func GetUsers(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"data": users})
 }
+
+func GetUser(c *gin.Context) {
+	id := c.Param("id")
+
+	if err := repositories.VerifyIfUserExists(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	var user models.User
+
+	if err := repositories.GetUser(&user, id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"data": user})
+}
