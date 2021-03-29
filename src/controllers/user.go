@@ -78,3 +78,21 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+
+func DeleteUser(c *gin.Context) {
+	var user models.User
+	id := c.Param("id")
+	if repositories.GetUser(&user, id) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	if err := repositories.DeleteUser(&user, id); err != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message: ": "user deleted"})
+
+
+}
