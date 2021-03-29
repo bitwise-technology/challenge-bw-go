@@ -17,3 +17,18 @@ func GetUsers() []models.User {
 	database.Db.Find(&users)
 	return users
 }
+
+func VerifyIfUserExists(id string) error {
+	if err := database.Db.Where("id = ?", id).Error; err != nil {
+
+		return err
+	}
+	return nil
+}
+
+func GetUser(user *models.User, id string) error {
+	if err := database.Db.Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+	}
+	return nil
+}
