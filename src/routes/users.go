@@ -10,5 +10,7 @@ func UsersRoutes(route *gin.RouterGroup) {
 	group.POST("/", controllers.CreateUser)
 	group.GET("/", controllers.GetUsers)
 	group.GET("/:id", controllers.GetUser)
+	group.PATCH("/:id", controllers.UpdateUser)
+
 
 }

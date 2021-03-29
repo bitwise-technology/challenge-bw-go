@@ -18,16 +18,22 @@ func GetUsers() []models.User {
 	return users
 }
 
-func VerifyIfUserExists(id string) error {
-	if err := database.Db.Where("id = ?", id).Error; err != nil {
-
+func GetUser(user *models.User, id string) error {
+	if err := database.Db.Where("id = ?", id).First(&user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetUser(user *models.User, id string) error {
-	if err := database.Db.Where("id = ?", id).First(&user).Error; err != nil {
+func UpdateUser(user *models.User, input *models.User) error{
+	if err := database.Db.Model(&user).Updates(input).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteUser(user *models.User, id string) error {
+	if err := database.Db.Delete(user, id).Error; err != nil {
 		return err
 	}
 	return nil
